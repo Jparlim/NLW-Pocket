@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx --env-file .env watch src/http/server.ts",
+    "dev": "tsx watch --env-file .env src/http/server.ts",
     "seed": "tsx --env-file .env src/db/seed.ts"
   },
   "keywords": [],
@@ -23,6 +23,8 @@
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.41.0",
     "fastify": "^5.2.2",
+    "fastify-type-provider-zod": "^4.0.2",
+    "pg": "^8.14.1",
     "postgres": "^3.4.5",
     "zod": "^3.24.2"
   }
