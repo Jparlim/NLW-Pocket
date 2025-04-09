@@ -2,6 +2,8 @@ import fastify from 'fastify'
 import z from 'zod'
 import { createGoals } from '../functions/createGoals'
 
+import { getweekpendingsgoals } from '../functions/get-week-pwndings'
+
 import {
   serializerCompiler,
   validatorCompiler,
@@ -12,8 +14,6 @@ const App = fastify().withTypeProvider<ZodTypeProvider>()
 
 App.setValidatorCompiler(validatorCompiler)
 App.setSerializerCompiler(serializerCompiler)
-
-App.listen({ port: 3333 }, () => console.log('server is running'))
 
 App.post(
   '/goals',
@@ -30,7 +30,15 @@ App.post(
 
     await createGoals({
       title,
-      desiredweeklyfrequecy
+      desiredweeklyfrequecy,
     })
   }
 )
+
+App.get('/goals-pendings', async () => {
+  const sql = await getweekpendingsgoals()
+
+  return sql
+})
+
+App.listen({ port: 3333 }, () => console.log('server is running'))
