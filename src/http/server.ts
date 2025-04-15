@@ -1,6 +1,7 @@
 import fastify from 'fastify'
-import z from 'zod'
+import z, { string } from 'zod'
 import { createGoals } from '../functions/createGoals'
+import { createGoalCompletions } from '../functions/create-goals-completions'
 
 import { getweekpendingsgoals } from '../functions/get-week-pwndings'
 
@@ -35,10 +36,30 @@ App.post(
   }
 )
 
-App.get('/goals-pendings', async () => {
-  const sql = await getweekpendingsgoals()
+App.post(
+  '/completions',
+  {
+    schema: {
+      body: z.object({
+        goalId: z.string(),
+      }),
+    },
+  },
+  async request => {
+    const { goalId } = request.body
 
-  return sql
+    const result = await createGoalCompletions({
+      goalId,
+    })
+
+    return result
+  }
+)
+
+App.get('/goals-pendings', async () => {
+  const { goalspending } = await getweekpendingsgoals()
+
+  return goalspending
 })
 
 App.listen({ port: 3333 }, () => console.log('server is running'))
