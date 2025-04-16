@@ -8,8 +8,6 @@ interface creategoalsrequest {
 }
 
 export async function createGoalCompletions({ goalId }: creategoalsrequest) {
-  const sla = await db.insert(goalsCompletions).values({ goalId }).returning()
-
   const firstdayofweek = dayjs().startOf('week').toDate()
   const lastdayofweek = dayjs().endOf('week').toDate()
 
@@ -41,6 +39,18 @@ export async function createGoalCompletions({ goalId }: creategoalsrequest) {
     .from(goals)
     .leftJoin(countgoalscomoletions, eq(countgoalscomoletions.goalId, goals.id))
     .where(eq(goals.id, goalId))
+    .limit(1)
 
-  return result
+  const { completionscount, desiredweeklyfrequecy } = result[0]
+
+  if (completionscount >= desiredweeklyfrequecy) {
+    throw new Error('goals ready completed this week')
+  }
+
+  const sla = await db.insert(goalsCompletions).values({ goalId }).returning()
+  const metacompleta = sla[0]
+
+  return {
+    metacompleta,
+  }
 }

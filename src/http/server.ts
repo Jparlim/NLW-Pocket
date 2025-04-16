@@ -48,11 +48,9 @@ App.post(
   async request => {
     const { goalId } = request.body
 
-    const result = await createGoalCompletions({
+    await createGoalCompletions({
       goalId,
     })
-
-    return result
   }
 )
 
